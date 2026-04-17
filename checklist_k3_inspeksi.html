@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist Persiapan Inspeksi K3 – Tempat Usaha Makanan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a18;
+    --ink-soft: #4a4a46;
+    --ink-muted: #8a8a84;
+    --surface: #faf9f6;
+    --surface-2: #f2f1ec;
+    --surface-3: #e8e6df;
+    --accent: #1a4f3a;
+    --accent-2: #2d7a5a;
+    --accent-light: #e4f0eb;
+    --warn: #8b4500;
+    --warn-light: #fef3e8;
+    --danger: #7a1f1f;
+    --danger-light: #fdeaea;
+    --success: #1a4f3a;
+    --success-light: #e4f0eb;
+    --border: #d8d6cf;
+    --border-soft: #e8e6df;
+    --radius: 6px;
+    --radius-lg: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--surface);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    .no-print { display: none !important; }
+    body { background: white; }
+    .page-wrap { max-width: 100%; padding: 0; }
+    .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+    .kop { border-bottom: 3px double #000; }
+    .item-row { break-inside: avoid; }
+    .progress-section { display: none; }
+    .verify-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .page-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* ── KOP SURAT ── */
+  .kop {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: white;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kop::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+  }
+
+  .kop-logo {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .kop-logo svg { width: 32px; height: 32px; }
+
+  .kop-text { flex: 1; }
+  .kop-instansi {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+  }
+  .kop-sub {
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    margin-top: 3px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .kop-line {
+    height: 2px;
+    background: var(--accent);
+    margin-top: 10px;
+    border-radius: 2px;
+  }
+  .kop-line-thin {
+    height: 1px;
+    background: var(--ink);
+    margin-top: 2px;
+  }
+
+  /* ── JUDUL DOKUMEN ── */
+  .doc-title-block {
+    text-align: center;
+    margin: 1.5rem 0 1.25rem;
+  }
+  .doc-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .doc-subtitle {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ── META TABLE ── */
+  .meta-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin-bottom: 1.5rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .meta-table td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    vertical-align: top;
+  }
+  .meta-table tr:last-child td { border-bottom: none; }
+  .meta-table .meta-key {
+    width: 38%;
+    color: var(--ink-muted);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .meta-table .meta-sep { width: 4%; color: var(--ink-muted); }
+  .meta-table .meta-val { font-weight: 500; }
+  .meta-table .meta-val input {
+    border: none;
+    border-bottom: 1px dashed var(--border);
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink);
+    width: 100%;
+    outline: none;
+    padding: 1px 2px;
+  }
+  .meta-table .meta-val input[type="date"] {
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .meta-table .meta-val input:focus {
+    border-bottom-color: var(--accent);
+  }
+
+  /* ── PROGRESS ── */
+  .progress-section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .progress-label { font-size: 0.78rem; color: var(--ink-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  .progress-pct { font-family: 'DM Mono', monospace; font-size: 1.1rem; font-weight: 500; color: var(--accent); }
+  .progress-track {
+    height: 8px;
+    background: var(--surface-3);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+  .stat-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .stat-pill {
+    flex: 1;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    padding: 6px 10px;
+    text-align: center;
+  }
+  .stat-num { font-family: 'DM Mono', monospace; font-size: 1.1rem; font-weight: 500; }
+  .stat-lbl { font-size: 0.68rem; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1px; }
+
+  /* ── KATEGORI BLOCK ── */
+  .cat-block {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .cat-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .cat-stripe {
+    width: 4px;
+    height: 20px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .cat-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    flex: 1;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .cat-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    background: var(--surface-3);
+    padding: 2px 8px;
+    border-radius: 99px;
+  }
+
+  /* ── ITEM ROW ── */
+  .item-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-soft);
+    cursor: pointer;
+    transition: background 0.12s;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .item-row:last-child { border-bottom: none; }
+  .item-row:hover { background: var(--surface-2); }
+  .item-row.checked { background: var(--success-light); }
+  .item-row.denied { background: var(--danger-light); }
+
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    background: white;
+  }
+  .item-row.checked .checkbox {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .item-row.denied .checkbox {
+    background: var(--danger);
+    border-color: var(--danger);
+  }
+  .mark {
+    display: none;
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 700;
+    color: white;
+  }
+  .item-row.checked .checkmark { display: block; }
+  .item-row.denied .crossmark { display: block; }
+
+  .item-content { flex: 1; }
+  .item-text {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--ink);
+    transition: color 0.15s;
+  }
+  .item-row.checked .item-text {
+    text-decoration: line-through;
+    color: var(--ink-muted);
+  }
+  .item-row.denied .item-text {
+    color: var(--danger);
+    text-decoration: line-through;
+  }
+  .item-note {
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    margin-top: 3px;
+    font-style: italic;
+  }
+
+  .tag-wajib {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--warn-light);
+    color: var(--warn);
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+
+  /* ── PRINT BOX ── */
+  .print-only {
+    display: none;
+  }
+  @media print {
+    .print-only { display: block; }
+    .item-row { cursor: default; }
+    .checkbox {
+      border: 1.5px solid #999;
+      background: white !important;
+    }
+    .item-row.checked .checkbox {
+      background: white !important;
+      border-color: #999 !important;
+    }
+    .item-row.denied .checkbox {
+      background: white !important;
+      border-color: #999 !important;
+    }
+    .item-row.checked .checkmark,
+    .item-row.denied .crossmark {
+      color: #111 !important;
+      display: block !important;
+    }
+    .item-row.checked { background: white !important; }
+    .item-row.denied { background: white !important; }
+  }
+
+  /* ── SIGN BLOCK ── */
+  .sign-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+  }
+  .sign-col { text-align: center; }
+  .sign-title { font-size: 0.75rem; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .sign-name { font-size: 0.8rem; font-weight: 600; }
+  .sign-col input {
+    width: 100%;
+    max-width: 280px;
+    border: none;
+    border-bottom: 1px dashed var(--border);
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-align: center;
+    outline: none;
+    padding: 2px 6px;
+  }
+  .sign-col input:focus { border-bottom-color: var(--accent); }
+
+  /* ── ACTIONS ── */
+  .action-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+    transition: all 0.12s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn:hover { background: var(--surface-2); border-color: var(--accent); color: var(--accent); }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); color: white; }
+  .btn-soft {
+    background: var(--surface-2);
+  }
+  .autosave-pill {
+    margin-left: auto;
+    font-size: 0.74rem;
+    color: var(--ink-muted);
+    padding: 7px 10px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    background: white;
+    white-space: nowrap;
+  }
+
+  /* ── STAGE & RESULT ── */
+  .stage-section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .stage-title {
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .stage-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .stage-opt {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .result-card {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    background: var(--surface-2);
+  }
+  .result-key {
+    font-size: 0.68rem;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+  }
+  .result-val {
+    margin-top: 4px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .result-val.ok { color: var(--success); }
+  .result-val.warn { color: var(--warn); }
+  .result-val.danger { color: var(--danger); }
+  .verify-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+    margin-top: 12px;
+  }
+  .verify-field label {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .verify-field input,
+  .verify-field select,
+  .verify-field textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    color: var(--ink);
+    padding: 8px 10px;
+    outline: none;
+  }
+  .verify-field textarea {
+    min-height: 78px;
+    resize: vertical;
+  }
+  .verify-field input:focus,
+  .verify-field select:focus,
+  .verify-field textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(26,79,58,.08);
+  }
+  .verify-field.full { grid-column: span 2; }
+  .verify-hint {
+    margin-top: 8px;
+    font-size: 0.74rem;
+    color: var(--ink-muted);
+  }
+  .verify-section-muted {
+    background: #f3f3f3;
+    border-color: #e1e1e1;
+  }
+  .verify-section-muted .stage-title,
+  .verify-section-muted .verify-hint,
+  .verify-section-muted .verify-field label {
+    color: #8a8a84;
+  }
+  .verify-section-muted .verify-field input,
+  .verify-section-muted .verify-field select,
+  .verify-section-muted .verify-field textarea {
+    background: #f7f7f7;
+    border-color: #e2e2e2;
+    color: #8a8a84;
+  }
+
+  /* ── STATUS BANNER ── */
+  .status-banner {
+    display: none;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+  }
+  .status-banner.show { display: block; }
+  .status-banner.ok { background: var(--success-light); color: var(--success); border: 1px solid var(--accent); }
+  .status-banner.warn { background: var(--warn-light); color: var(--warn); border: 1px solid var(--warn); }
+  .status-banner.danger { background: var(--danger-light); color: var(--danger); border: 1px solid var(--danger); }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-soft);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── NOMOR ITEM ── */
+  .item-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--ink-muted);
+    min-width: 18px;
+    margin-top: 4px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- KOP SURAT -->
+  <div class="kop">
+    <div class="kop-logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="13" stroke="white" stroke-width="1.5"/>
+        <path d="M16 8v8l5 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10 22s1.5-3 6-3 6 3 6 3" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="kop-text">
+      <div class="kop-instansi">Dinas Keselamatan dan Kesehatan Kerja</div>
+      <div class="kop-sub">Pemerintah Daerah &nbsp;·&nbsp; Wilayah Hukum Setempat</div>
+      <div class="kop-line"></div>
+      <div class="kop-line-thin"></div>
+    </div>
+  </div>
+
+  <!-- JUDUL -->
+  <div class="doc-title-block">
+    <div class="doc-title">Checklist Persiapan Inspeksi K3</div>
+    <div class="doc-subtitle">Tempat Usaha Makanan &nbsp;·&nbsp; Diisi Sebelum Petugas Tiba</div>
+  </div>
+
+  <!-- META -->
+  <table class="meta-table">
+    <tr>
+      <td class="meta-key">Nomor Dokumen</td>
+      <td class="meta-sep">:</td>
+      <td class="meta-val" id="doc-no-display">K3-CK-FNB/UMUM/0000-00/001</td>
+    </tr>
+    <tr>
+      <td class="meta-key">Wilayah / Cabang</td>
+      <td class="meta-sep">:</td>
+      <td class="meta-val"><input type="text" id="wilayah" placeholder="Contoh: Roxwood" /></td>
+    </tr>
+    <tr>
+      <td class="meta-key">No. Urut Dokumen</td>
+      <td class="meta-sep">:</td>
+      <td class="meta-val"><input type="text" id="doc-seq" inputmode="numeric" placeholder="001" /></td>
+    </tr>
+    <tr>
+      <td class="meta-key">Nama Usaha</td>
+      <td class="meta-sep">:</td>
+      <td class="meta-val"><input type="text" id="nama-usaha" placeholder="Isi nama usaha..." /></td>
+    </tr>
+    <tr>
+      <td class="meta-key">Alamat Usaha</td>
+      <td class="meta-sep">:</td>
+      <td class="meta-val"><input type="text" id="alamat-usaha" placeholder="Isi alamat..." /></td>
+    </tr>
+    <tr>
+      <td class="meta-key">Nama Pemilik / Pengelola</td>
+      <td class="meta-sep">:</td>
+      <td class="meta-val"><input type="text" id="nama-pemilik" placeholder="Nama lengkap..." /></td>
+    </tr>
+    <tr>
+      <td class="meta-key">Tanggal Pengisian</td>
+      <td class="meta-sep">:</td>
+      <td class="meta-val"><input type="date" id="tgl-pengisian" /></td>
+    </tr>
+    <tr>
+      <td class="meta-key">Nomor Registrasi K3</td>
+      <td class="meta-sep">:</td>
+      <td class="meta-val"><input type="text" id="no-reg" placeholder="Diisi petugas jika sudah terdaftar" /></td>
+    </tr>
+  </table>
+
+  <!-- ACTIONS -->
+  <div class="action-row no-print">
+    <button class="btn btn-primary" onclick="handlePrint()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="3" y="1" width="10" height="7" rx="1" stroke="white" stroke-width="1.4"/><path d="M3 8H1v5h14V8h-2" stroke="white" stroke-width="1.4" stroke-linecap="round"/><rect x="4" y="10" width="8" height="4" rx="1" fill="white" opacity=".25" stroke="white" stroke-width="1.2"/></svg>
+      Cetak Dokumen
+    </button>
+    <button class="btn" onclick="resetAll()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13.5 2.5A7 7 0 1 0 14 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 2.5V6H10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Reset Centang
+    </button>
+    <button class="btn btn-soft" onclick="exportSnapshot()">
+      Export JSON
+    </button>
+    <button class="btn btn-soft" onclick="importSnapshot()">
+      Import JSON
+    </button>
+    <span class="autosave-pill" id="autosave-label">Belum tersimpan</span>
+  </div>
+  <input type="file" id="snapshot-file" accept="application/json" style="display:none" />
+
+  <!-- STAGE -->
+  <div class="stage-section">
+    <div class="stage-title">Tahap Pemeriksaan</div>
+    <div class="stage-row no-print">
+      <label class="stage-opt">
+        <input type="radio" name="inspection-stage" value="self" checked />
+        Self-Assessment (Pemilik/Wakil)
+      </label>
+      <label class="stage-opt">
+        <input type="radio" name="inspection-stage" value="verify" />
+        Verifikasi Petugas K3
+      </label>
+    </div>
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-key">Status Dokumen</div>
+        <div class="result-val" id="doc-stage-label">Self-Assessment</div>
+      </div>
+      <div class="result-card">
+        <div class="result-key">Status Kelayakan</div>
+        <div class="result-val" id="eligibility-label">Menunggu Verifikasi Petugas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERIFICATION DATA -->
+  <div class="stage-section" id="verify-section">
+    <div class="stage-title">Info Verifikasi (Sederhana)</div>
+    <div class="verify-grid">
+      <div class="verify-field">
+        <label for="verify-date">Tanggal Verifikasi</label>
+        <input type="date" id="verify-date" />
+      </div>
+      <div class="verify-field">
+        <label for="officer-id">Nama Petugas (Opsional)</label>
+        <input type="text" id="officer-id" placeholder="Boleh diisi jika perlu" />
+      </div>
+      <div class="verify-field full">
+        <label for="officer-decision">Keputusan Petugas</label>
+        <select id="officer-decision">
+          <option value="">Pilih keputusan</option>
+          <option value="pass">Lulus Verifikasi</option>
+          <option value="minor">Perlu Perbaikan Minor</option>
+          <option value="hold">Tidak Lulus Sementara</option>
+        </select>
+      </div>
+      <div class="verify-field full">
+        <label for="verify-notes">Catatan Singkat (Opsional)</label>
+        <textarea id="verify-notes" placeholder="Contoh: Area dapur rapi, APAR terlihat, perlu rapikan jalur evakuasi."></textarea>
+      </div>
+    </div>
+    <div class="verify-hint">Cukup isi data penting saja agar proses cepat. Yang wajib saat verifikasi: tanggal, nama petugas pemeriksa, dan keputusan.</div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-section no-print">
+    <div class="progress-top">
+      <span class="progress-label">Progress Persiapan</span>
+      <span class="progress-pct" id="pct-label">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill"></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="stat-num" id="cnt-done" style="color:var(--accent)">0</div><div class="stat-lbl">Siap</div></div>
+      <div class="stat-pill"><div class="stat-num" id="cnt-left" style="color:var(--warn)">0</div><div class="stat-lbl">Belum</div></div>
+      <div class="stat-pill"><div class="stat-num" id="cnt-total">0</div><div class="stat-lbl">Total</div></div>
+    </div>
+  </div>
+
+  <!-- STATUS BANNER -->
+  <div class="status-banner" id="status-banner">
+    Status pemeriksaan akan tampil di sini.
+  </div>
+
+  <!-- CHECKLIST ROOT -->
+  <div id="checklist-root"></div>
+
+  <!-- TANDA TANGAN -->
+  <div class="sign-block">
+    <div class="sign-col">
+      <div class="sign-title">Pemilik / Pengelola Usaha</div>
+      <div class="sign-name"><input type="text" id="nama-penanggung-jawab" placeholder="Nama" /></div>
+    </div>
+    <div class="sign-col">
+      <div class="sign-title">Diperiksa oleh Petugas K3</div>
+      <div class="sign-name"><input type="text" id="nama-petugas" placeholder="Nama" /></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    Dokumen ini diterbitkan oleh Dinas K3 &nbsp;·&nbsp; Nomor K3/CK/FNB/01 &nbsp;·&nbsp; Revisi 00 &nbsp;·&nbsp; Harap disimpan untuk arsip perpanjangan
+  </div>
+
+</div>
+
+<script>
+const cats = [
+  {
+    title: "Kebersihan Dapur & Peralatan",
+    color: "#1D9E75",
+    items: [
+      { text: "Lantai dapur bersih, tidak licin, tidak ada genangan air" },
+      { text: "Permukaan meja masak bebas dari sisa bahan makanan" },
+      { text: "Peralatan masak (wajan, pisau, talenan) dicuci bersih dan disimpan rapi" },
+      { text: "Tidak ada bahan makanan mentah yang dibiarkan terbuka di suhu ruang" },
+      { text: "Kulkas/lemari pendingin berfungsi dan tidak berbau", note: "Cek suhu: makanan beku ≤ -18°C, makanan segar ≤ 5°C" },
+      { text: "Area penyajian makanan bebas dari serangga dan hewan" },
+    ]
+  },
+  {
+    title: "APD & Seragam Karyawan",
+    color: "#185FA5",
+    items: [
+      { text: "Seluruh karyawan mengenakan celemek bersih" },
+      { text: "Karyawan menggunakan penutup kepala (hairnet / topi) saat bekerja" },
+      { text: "Karyawan menggunakan masker / penutup mulut saat bekerja" },
+      { text: "Sarung tangan tersedia dan digunakan saat memegang makanan siap saji" },
+      { text: "Karyawan yang sakit (flu, batuk, luka terbuka) tidak bertugas di area makanan", warn: true },
+    ]
+  },
+  {
+    title: "Sanitasi & Fasilitas Cuci Tangan",
+    color: "#534AB7",
+    items: [
+      { text: "Sabun cuci tangan tersedia di wastafel" },
+      { text: "Tisu atau pengering tangan tersedia di dekat wastafel" },
+      { text: "Toilet karyawan bersih dan berfungsi" },
+      { text: "Tidak ada peralatan makan/masak yang disimpan di dekat toilet" },
+    ]
+  },
+  {
+    title: "Keselamatan & Alat Darurat",
+    color: "#A32D2D",
+    items: [
+      { text: "APAR (Alat Pemadam Api Ringan) tersedia di dapur, tidak kadaluarsa", note: "Cek tanggal kadaluarsa pada label APAR", warn: true },
+      { text: "Jalur evakuasi darurat tidak terhalang oleh barang atau furnitur" },
+      { text: "Kotak P3K tersedia dan berisi perlengkapan dasar" },
+    ]
+  },
+  {
+    title: "Dokumen & Administrasi",
+    color: "#5F5E5A",
+    items: [
+      { text: "Sertifikat K3 sebelumnya (jika ada) tersimpan dan dapat ditunjukkan" },
+      { text: "Daftar nama karyawan terbaru sudah disiapkan" },
+      { text: "Izin usaha dapat ditunjukkan saat diminta petugas" },
+      { text: "Pemilik atau perwakilan yang berwenang hadir saat inspeksi", warn: true },
+    ]
+  },
+];
+
+let state = {};
+let total = 0;
+let itemCounter = 0;
+const STORAGE_KEY = 'k3_inspeksi_snapshot_v1';
+let saveTimer = null;
+const FIELD_IDS = [
+  'wilayah', 'doc-seq', 'nama-usaha', 'alamat-usaha', 'nama-pemilik', 'tgl-pengisian', 'no-reg',
+  'verify-date', 'verify-platform', 'verify-session', 'officer-id', 'officer-decision', 'verify-notes',
+  'nama-penanggung-jawab', 'nama-petugas'
+];
+
+function formatDocNo() {
+  const dateInput = document.getElementById('tgl-pengisian');
+  const wilayahInput = document.getElementById('wilayah');
+  const seqInput = document.getElementById('doc-seq');
+  const docNoEl = document.getElementById('doc-no-display');
+
+  const date = dateInput && dateInput.value ? new Date(dateInput.value + 'T00:00:00') : new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+
+  const wilayahRaw = (wilayahInput?.value || '').trim().toUpperCase();
+  const wilayah = wilayahRaw ? wilayahRaw.replace(/[^A-Z0-9-]/g, '') : 'UMUM';
+
+  const seqRaw = (seqInput?.value || '').replace(/\D/g, '');
+  const seq = seqRaw ? seqRaw.padStart(3, '0').slice(-3) : '001';
+
+  docNoEl.textContent = `K3-CK-FNB/${wilayah}/${year}-${month}/${seq}`;
+}
+
+function getStateClass(value) {
+  if (value === 1) return ' checked';
+  if (value === 2) return ' denied';
+  return '';
+}
+
+function getCurrentStage() {
+  const selected = document.querySelector('input[name="inspection-stage"]:checked');
+  return selected ? selected.value : 'self';
+}
+
+function getInputValue(id) {
+  const el = document.getElementById(id);
+  return el ? String(el.value || '') : '';
+}
+
+function setInputValue(id, value) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.value = value ?? '';
+}
+
+function formatDateTime(ts) {
+  const d = new Date(ts);
+  if (Number.isNaN(d.getTime())) return '-';
+  return d.toLocaleString('id-ID', {
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit'
+  });
+}
+
+function updateAutosaveLabel(text) {
+  const label = document.getElementById('autosave-label');
+  if (label) label.textContent = text;
+}
+
+function getSnapshot() {
+  const fields = {};
+  FIELD_IDS.forEach(id => { fields[id] = getInputValue(id); });
+  return {
+    version: 1,
+    savedAt: new Date().toISOString(),
+    stage: getCurrentStage(),
+    fields,
+    checklistState: { ...state }
+  };
+}
+
+function applySnapshot(snapshot) {
+  if (!snapshot || typeof snapshot !== 'object') return false;
+  if (!snapshot.fields || !snapshot.checklistState) return false;
+
+  FIELD_IDS.forEach(id => setInputValue(id, snapshot.fields[id] || ''));
+  state = {};
+  Object.keys(snapshot.checklistState).forEach(k => {
+    const v = Number(snapshot.checklistState[k]);
+    state[k] = (v === 1 || v === 2) ? v : 0;
+  });
+
+  const stage = snapshot.stage === 'verify' ? 'verify' : 'self';
+  const radio = document.querySelector(`input[name="inspection-stage"][value="${stage}"]`);
+  if (radio) radio.checked = true;
+
+  formatDocNo();
+  build();
+  updateAutosaveLabel(`Dipulihkan: ${formatDateTime(snapshot.savedAt)}`);
+  return true;
+}
+
+function saveSnapshot() {
+  try {
+    const snap = getSnapshot();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(snap));
+    updateAutosaveLabel(`Tersimpan lokal: ${formatDateTime(snap.savedAt)}`);
+  } catch (err) {
+    updateAutosaveLabel('Gagal simpan lokal');
+  }
+}
+
+function scheduleSave() {
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveSnapshot, 250);
+}
+
+function loadSnapshotFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const parsed = JSON.parse(raw);
+    return applySnapshot(parsed);
+  } catch (err) {
+    return false;
+  }
+}
+
+function exportSnapshot() {
+  const snap = getSnapshot();
+  const blob = new Blob([JSON.stringify(snap, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = new Date().toISOString().slice(0, 10);
+  const seq = (getInputValue('doc-seq').replace(/\D/g, '') || '001').padStart(3, '0').slice(-3);
+  a.href = url;
+  a.download = `backup-k3-${date}-${seq}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  updateAutosaveLabel(`Backup diexport: ${formatDateTime(snap.savedAt)}`);
+}
+
+function importSnapshot() {
+  const fileInput = document.getElementById('snapshot-file');
+  if (!fileInput) return;
+  fileInput.value = '';
+  fileInput.click();
+}
+
+function getComputedEvaluation(done, denied) {
+  const criticalKeys = [];
+  cats.forEach((cat, ci) => {
+    cat.items.forEach((item, ii) => {
+      if (item.warn) criticalKeys.push(`${ci}-${ii}`);
+    });
+  });
+  const criticalFailed = criticalKeys.some(key => state[key] !== 1);
+
+  if (criticalFailed) {
+    return {
+      code: 'hold',
+      label: 'Tidak Lulus Sementara (Item Wajib)',
+      level: 'danger',
+      banner: 'x &nbsp; Ada item wajib yang belum memenuhi. Perbaikan diperlukan sebelum proses sertifikat.'
+    };
+  }
+  if (denied > 0 || done < total) {
+    return {
+      code: 'minor',
+      label: 'Perlu Perbaikan Minor',
+      level: 'warn',
+      banner: 'i &nbsp; Item wajib sudah terpenuhi, namun masih ada temuan non-kritis yang perlu ditindaklanjuti.'
+    };
+  }
+  return {
+    code: 'pass',
+    label: 'Lulus Verifikasi',
+    level: 'ok',
+    banner: '✓ &nbsp; Verifikasi petugas selesai dan semua poin terpenuhi. Dokumen siap diproses ke tahap sertifikat.'
+  };
+}
+
+function syncVerificationFieldRules() {
+  const isVerify = getCurrentStage() === 'verify';
+  const ids = ['verify-date', 'officer-decision', 'nama-petugas'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (isVerify) el.setAttribute('required', 'required');
+    else el.removeAttribute('required');
+  });
+}
+
+function updateVerificationSectionVisualState() {
+  const section = document.getElementById('verify-section');
+  if (!section) return;
+  const isVerify = getCurrentStage() === 'verify';
+  section.classList.toggle('verify-section-muted', !isVerify);
+}
+
+function handlePrint() {
+  const stage = getCurrentStage();
+  if (stage === 'verify') {
+    const requiredIds = ['verify-date', 'officer-decision', 'nama-petugas'];
+    const missing = requiredIds.some(id => {
+      const el = document.getElementById(id);
+      return !el || !String(el.value || '').trim();
+    });
+    if (missing) {
+      alert('Lengkapi data wajib verifikasi (tanggal, nama petugas, dan keputusan) sebelum cetak dokumen.');
+      return;
+    }
+  }
+  window.print();
+  scheduleSave();
+}
+
+function build() {
+  const root = document.getElementById('checklist-root');
+  root.innerHTML = '';
+  total = 0;
+  itemCounter = 0;
+
+  cats.forEach((cat, ci) => {
+    total += cat.items.length;
+    const block = document.createElement('div');
+    block.className = 'cat-block';
+
+    const head = document.createElement('div');
+    head.className = 'cat-head';
+    head.innerHTML = `
+      <div class="cat-stripe" style="background:${cat.color}"></div>
+      <div class="cat-title">${cat.title}</div>
+      <div class="cat-badge" id="cc-${ci}">0 / ${cat.items.length}</div>
+    `;
+    block.appendChild(head);
+
+    cat.items.forEach((item, ii) => {
+      const key = `${ci}-${ii}`;
+      if (!(key in state)) state[key] = 0;
+      itemCounter++;
+      const num = String(itemCounter).padStart(2, '0');
+      const rowStateClass = getStateClass(state[key]);
+
+      const row = document.createElement('div');
+      row.className = 'item-row' + rowStateClass;
+      row.id = `row-${key}`;
+      row.onclick = () => toggle(ci, ii, cat.items.length);
+
+      row.innerHTML = `
+        <div class="item-num">${num}</div>
+        <div class="checkbox" id="cb-${key}">
+          <span class="mark checkmark">&#10003;</span>
+          <span class="mark crossmark">&#10005;</span>
+        </div>
+        <div class="item-content">
+          <div class="item-text">${item.text}${item.warn ? '<span class="tag-wajib">Wajib</span>' : ''}</div>
+          ${item.note ? `<div class="item-note">${item.note}</div>` : ''}
+        </div>
+      `;
+      block.appendChild(row);
+    });
+
+    root.appendChild(block);
+  });
+
+  document.getElementById('cnt-total').textContent = total;
+  updateCounts();
+}
+
+function toggle(ci, ii, catLen) {
+  const key = `${ci}-${ii}`;
+  const stage = getCurrentStage();
+  if (stage === 'self') {
+    state[key] = state[key] === 1 ? 0 : 1;
+  } else {
+    state[key] = (state[key] + 1) % 3;
+  }
+  const row = document.getElementById(`row-${key}`);
+  row.classList.toggle('checked', state[key] === 1);
+  row.classList.toggle('denied', state[key] === 2);
+
+  let done = 0;
+  cats[ci].items.forEach((_, i) => { if (state[`${ci}-${i}`] === 1) done++; });
+  document.getElementById(`cc-${ci}`).textContent = `${done} / ${catLen}`;
+  updateCounts();
+  scheduleSave();
+}
+
+function updateCounts() {
+  const done = Object.values(state).filter(v => v === 1).length;
+  const denied = Object.values(state).filter(v => v === 2).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('cnt-done').textContent = done;
+  document.getElementById('cnt-left').textContent = total - done;
+  document.getElementById('pct-label').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+  updateEligibility(done, denied);
+}
+
+function updateEligibility(done, denied) {
+  const stage = getCurrentStage();
+  const stageLabel = document.getElementById('doc-stage-label');
+  const eligibilityLabel = document.getElementById('eligibility-label');
+  const banner = document.getElementById('status-banner');
+  const decisionSelect = document.getElementById('officer-decision');
+  const verifyNotes = document.getElementById('verify-notes');
+  const computed = getComputedEvaluation(done, denied);
+
+  stageLabel.textContent = stage === 'self' ? 'Self-Assessment' : 'Verifikasi Petugas';
+  stageLabel.className = 'result-val';
+  eligibilityLabel.className = 'result-val';
+  banner.className = 'status-banner show';
+  syncVerificationFieldRules();
+  updateVerificationSectionVisualState();
+
+  if (stage === 'self') {
+    if (done === total && total > 0) {
+      eligibilityLabel.textContent = 'Siap Diverifikasi Petugas';
+      eligibilityLabel.classList.add('warn');
+      banner.classList.add('warn');
+      banner.innerHTML = 'i &nbsp; Self-assessment lengkap. Lanjutkan verifikasi live bersama petugas K3.';
+    } else {
+      eligibilityLabel.textContent = 'Belum Lengkap';
+      eligibilityLabel.classList.add('warn');
+      banner.classList.add('warn');
+      banner.innerHTML = 'i &nbsp; Dokumen masih tahap self-assessment, belum bisa dinyatakan lulus inspeksi.';
+    }
+    return;
+  }
+
+  const finalDecision = decisionSelect ? decisionSelect.value : '';
+  if (!finalDecision) {
+    eligibilityLabel.textContent = 'Menunggu Keputusan Final Petugas';
+    eligibilityLabel.classList.add('warn');
+    banner.classList.add('warn');
+    banner.innerHTML = `i &nbsp; Hasil perhitungan sementara: ${computed.label}. Tetapkan keputusan final petugas untuk menutup inspeksi.`;
+    return;
+  }
+
+  const decisionMap = {
+    pass: { label: 'Lulus Verifikasi', level: 'ok' },
+    minor: { label: 'Perlu Perbaikan Minor', level: 'warn' },
+    hold: { label: 'Tidak Lulus Sementara (Item Wajib)', level: 'danger' }
+  };
+  const selected = decisionMap[finalDecision] || decisionMap.hold;
+
+  eligibilityLabel.textContent = selected.label;
+  eligibilityLabel.classList.add(selected.level);
+  banner.classList.add(selected.level);
+  banner.innerHTML = computed.code === finalDecision
+    ? computed.banner
+    : `i &nbsp; Keputusan petugas: ${selected.label}. Catat alasan perbedaan dengan hasil otomatis pada kolom catatan verifikasi.`;
+
+  if (computed.code !== finalDecision && verifyNotes && !verifyNotes.value.trim()) {
+    verifyNotes.setAttribute('required', 'required');
+  } else if (verifyNotes) {
+    verifyNotes.removeAttribute('required');
+  }
+}
+
+function resetAll() {
+  Object.keys(state).forEach(k => state[k] = 0);
+  document.getElementById('officer-decision').value = '';
+  document.getElementById('verify-notes').value = '';
+  build();
+  scheduleSave();
+}
+
+document.getElementById('tgl-pengisian').valueAsDate = new Date();
+document.getElementById('tgl-pengisian').addEventListener('change', formatDocNo);
+document.getElementById('wilayah').addEventListener('input', formatDocNo);
+document.getElementById('doc-seq').addEventListener('input', formatDocNo);
+document.querySelectorAll('input[name="inspection-stage"]').forEach(el => {
+  el.addEventListener('change', () => { updateCounts(); scheduleSave(); });
+});
+document.getElementById('officer-decision').addEventListener('change', () => { updateCounts(); scheduleSave(); });
+document.getElementById('snapshot-file').addEventListener('change', (event) => {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(String(reader.result || '{}'));
+      const ok = applySnapshot(parsed);
+      if (!ok) {
+        alert('Format backup tidak valid.');
+        return;
+      }
+      scheduleSave();
+    } catch (err) {
+      alert('File backup tidak dapat dibaca.');
+    }
+  };
+  reader.readAsText(file);
+});
+
+FIELD_IDS.forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', scheduleSave);
+  el.addEventListener('change', scheduleSave);
+});
+window.addEventListener('beforeunload', saveSnapshot);
+formatDocNo();
+
+cats.forEach((cat, ci) => cat.items.forEach((_, ii) => { state[`${ci}-${ii}`] = 0; }));
+build();
+if (!loadSnapshotFromStorage()) {
+  saveSnapshot();
+}
+</script>
+</body>
+</html>
