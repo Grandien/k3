@@ -861,6 +861,7 @@ let total = 0;
 let itemCounter = 0;
 const STORAGE_KEY = 'k3_inspeksi_snapshot_v1';
 let saveTimer = null;
+const INTEGRITY_SCHEMA = 1;
 const FIELD_IDS = [
   'wilayah', 'doc-seq', 'nama-usaha', 'alamat-usaha', 'nama-pemilik', 'tgl-pengisian', 'no-reg',
   'verify-date', 'verify-platform', 'verify-session', 'officer-id', 'officer-decision', 'verify-notes',
@@ -922,6 +923,71 @@ function updateAutosaveLabel(text) {
   if (label) label.textContent = text;
 }
 
+function stableStringify(value) {
+  if (value === null || typeof value !== 'object') return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(stableStringify).join(',')}]`;
+  const keys = Object.keys(value).sort();
+  return `{${keys.map(k => `${JSON.stringify(k)}:${stableStringify(value[k])}`).join(',')}}`;
+}
+
+function toHex(buffer) {
+  return Array.from(new Uint8Array(buffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function hashFallbackFNV1a(input) {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < input.length; i++) {
+    hash ^= input.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0');
+}
+
+function getSnapshotIntegrityPayload(snapshot) {
+  return {
+    version: Number(snapshot?.version || 1),
+    savedAt: String(snapshot?.savedAt || ''),
+    stage: snapshot?.stage === 'verify' ? 'verify' : 'self',
+    fields: snapshot?.fields && typeof snapshot.fields === 'object' ? snapshot.fields : {},
+    checklistState: snapshot?.checklistState && typeof snapshot.checklistState === 'object' ? snapshot.checklistState : {}
+  };
+}
+
+async function computeSnapshotIntegrity(snapshot) {
+  const payload = getSnapshotIntegrityPayload(snapshot);
+  const text = stableStringify(payload);
+  try {
+    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+      const bytes = new TextEncoder().encode(text);
+      const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+      return { schema: INTEGRITY_SCHEMA, algo: 'SHA-256', value: toHex(digest) };
+    }
+  } catch (err) {
+    // Fallback below keeps snapshot import/export usable on older contexts.
+  }
+  return { schema: INTEGRITY_SCHEMA, algo: 'FNV-1A-32', value: hashFallbackFNV1a(text) };
+}
+
+async function makeSnapshotWithIntegrity(snapshot) {
+  return {
+    ...snapshot,
+    integrity: await computeSnapshotIntegrity(snapshot)
+  };
+}
+
+async function verifySnapshotIntegrity(snapshot) {
+  if (!snapshot || typeof snapshot !== 'object') return { ok: false, reason: 'invalid' };
+  if (!snapshot.integrity || typeof snapshot.integrity !== 'object') {
+    return { ok: true, reason: 'legacy-no-integrity' };
+  }
+  const expected = await computeSnapshotIntegrity(snapshot);
+  const sameAlgo = String(snapshot.integrity.algo || '') === expected.algo;
+  const sameValue = String(snapshot.integrity.value || '') === expected.value;
+  return { ok: sameAlgo && sameValue, reason: sameAlgo && sameValue ? 'ok' : 'mismatch' };
+}
+
 function getSnapshot() {
   const fields = {};
   FIELD_IDS.forEach(id => { fields[id] = getInputValue(id); });
@@ -955,9 +1021,9 @@ function applySnapshot(snapshot) {
   return true;
 }
 
-function saveSnapshot() {
+async function saveSnapshot() {
   try {
-    const snap = getSnapshot();
+    const snap = await makeSnapshotWithIntegrity(getSnapshot());
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snap));
     updateAutosaveLabel(`Tersimpan lokal: ${formatDateTime(snap.savedAt)}`);
   } catch (err) {
@@ -967,22 +1033,27 @@ function saveSnapshot() {
 
 function scheduleSave() {
   if (saveTimer) clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveSnapshot, 250);
+  saveTimer = setTimeout(() => { saveSnapshot(); }, 250);
 }
 
-function loadSnapshotFromStorage() {
+async function loadSnapshotFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return false;
     const parsed = JSON.parse(raw);
+    const integrity = await verifySnapshotIntegrity(parsed);
+    if (!integrity.ok) {
+      updateAutosaveLabel('Backup lokal gagal diverifikasi');
+      return false;
+    }
     return applySnapshot(parsed);
   } catch (err) {
     return false;
   }
 }
 
-function exportSnapshot() {
-  const snap = getSnapshot();
+async function exportSnapshot() {
+  const snap = await makeSnapshotWithIntegrity(getSnapshot());
   const blob = new Blob([JSON.stringify(snap, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1236,9 +1307,14 @@ document.getElementById('snapshot-file').addEventListener('change', (event) => {
   const file = event.target.files && event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = () => {
+  reader.onload = async () => {
     try {
       const parsed = JSON.parse(String(reader.result || '{}'));
+      const integrity = await verifySnapshotIntegrity(parsed);
+      if (!integrity.ok) {
+        alert('File backup gagal verifikasi checksum. File mungkin rusak atau telah diubah.');
+        return;
+      }
       const ok = applySnapshot(parsed);
       if (!ok) {
         alert('Format backup tidak valid.');
@@ -1263,9 +1339,12 @@ formatDocNo();
 
 cats.forEach((cat, ci) => cat.items.forEach((_, ii) => { state[`${ci}-${ii}`] = 0; }));
 build();
-if (!loadSnapshotFromStorage()) {
-  saveSnapshot();
-}
+(async function initSnapshotFlow() {
+  const loaded = await loadSnapshotFromStorage();
+  if (!loaded) {
+    await saveSnapshot();
+  }
+})();
 </script>
 </body>
 </html>
