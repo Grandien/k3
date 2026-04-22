@@ -802,18 +802,7 @@
 
 <script>
 const cats = [
-  {
-    title: "Kebersihan Dapur & Peralatan",
-    color: "#1D9E75",
-    items: [
-      { text: "Lantai dapur bersih, tidak licin, tidak ada genangan air" },
-      { text: "Permukaan meja masak bebas dari sisa bahan makanan" },
-      { text: "Peralatan masak (wajan, pisau, talenan) dicuci bersih dan disimpan rapi" },
-      { text: "Tidak ada bahan makanan mentah yang dibiarkan terbuka di suhu ruang" },
-      { text: "Kulkas/lemari pendingin berfungsi dan tidak berbau", note: "Cek suhu: makanan beku ≤ -18°C, makanan segar ≤ 5°C" },
-      { text: "Area penyajian makanan bebas dari serangga dan hewan" },
-    ]
-  },
+
   {
     title: "APD & Seragam Karyawan",
     color: "#185FA5",
@@ -1247,7 +1236,7 @@ function updateEligibility(done, denied) {
       eligibilityLabel.textContent = 'Siap Diverifikasi Petugas';
       eligibilityLabel.classList.add('warn');
       banner.classList.add('warn');
-      banner.innerHTML = 'i &nbsp; Self-assessment lengkap. Lanjutkan verifikasi live bersama petugas K3.';
+      banner.innerHTML = 'i &nbsp; Self-assessment lengkap. Lanjutkan verifikasi bersama petugas K3.';
     } else {
       eligibilityLabel.textContent = 'Belum Lengkap';
       eligibilityLabel.classList.add('warn');
