@@ -970,12 +970,20 @@ async function verifySnapshotIntegrity(snapshot) {
 function getSnapshot() {
   const fields = {};
   FIELD_IDS.forEach(id => { fields[id] = getInputValue(id); });
+  const activeChecklistState = {};
+  cats.forEach((cat, ci) => {
+    cat.items.forEach((_, ii) => {
+      const key = `${ci}-${ii}`;
+      const value = Number(state[key]);
+      activeChecklistState[key] = (value === 1 || value === 2) ? value : 0;
+    });
+  });
   return {
     version: 1,
     savedAt: new Date().toISOString(),
     stage: getCurrentStage(),
     fields,
-    checklistState: { ...state }
+    checklistState: activeChecklistState
   };
 }
 
@@ -985,9 +993,12 @@ function applySnapshot(snapshot) {
 
   FIELD_IDS.forEach(id => setInputValue(id, snapshot.fields[id] || ''));
   state = {};
-  Object.keys(snapshot.checklistState).forEach(k => {
-    const v = Number(snapshot.checklistState[k]);
-    state[k] = (v === 1 || v === 2) ? v : 0;
+  cats.forEach((cat, ci) => {
+    cat.items.forEach((_, ii) => {
+      const key = `${ci}-${ii}`;
+      const v = Number(snapshot.checklistState[key]);
+      state[key] = (v === 1 || v === 2) ? v : 0;
+    });
   });
 
   const stage = snapshot.stage === 'verify' ? 'verify' : 'self';
