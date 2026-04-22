@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checklist Persiapan Inspeksi K3 – Tempat Usaha Makanan</title>
+<title>Checklist Persiapan Inspeksi SAKRA – Tempat Usaha Makanan</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -635,7 +635,7 @@
 
   <!-- JUDUL -->
   <div class="doc-title-block">
-    <div class="doc-title">Checklist Persiapan Inspeksi K3</div>
+    <div class="doc-title">Checklist Persiapan Inspeksi SAKRA</div>
     <div class="doc-subtitle">Tempat Usaha Makanan &nbsp;·&nbsp; Diisi Sebelum Petugas Tiba</div>
   </div>
 
@@ -644,7 +644,7 @@
     <tr>
       <td class="meta-key">Nomor Dokumen</td>
       <td class="meta-sep">:</td>
-      <td class="meta-val" id="doc-no-display">K3-CK-FNB/UMUM/0000-00/001</td>
+      <td class="meta-val" id="doc-no-display">SAKRA-CK-FNB/UMUM/0000-00/001</td>
     </tr>
     <tr>
       <td class="meta-key">Wilayah / Cabang</td>
@@ -677,7 +677,7 @@
       <td class="meta-val"><input type="date" id="tgl-pengisian" /></td>
     </tr>
     <tr>
-      <td class="meta-key">Nomor Registrasi K3</td>
+      <td class="meta-key">Nomor Registrasi SAKRA</td>
       <td class="meta-sep">:</td>
       <td class="meta-val"><input type="text" id="no-reg" placeholder="Diisi petugas jika sudah terdaftar" /></td>
     </tr>
@@ -713,7 +713,7 @@
       </label>
       <label class="stage-opt">
         <input type="radio" name="inspection-stage" value="verify" />
-        Verifikasi Petugas K3
+        Verifikasi Petugas SAKRA
       </label>
     </div>
     <div class="result-grid">
@@ -788,14 +788,14 @@
       <div class="sign-name"><input type="text" id="nama-penanggung-jawab" placeholder="Nama" /></div>
     </div>
     <div class="sign-col">
-      <div class="sign-title">Diperiksa oleh Petugas K3</div>
+      <div class="sign-title">Diperiksa oleh Petugas SAKRA</div>
       <div class="sign-name"><input type="text" id="nama-petugas" placeholder="Nama" /></div>
     </div>
   </div>
 
   <!-- FOOTER -->
   <div class="doc-footer">
-    Dokumen ini diterbitkan oleh Dinas K3 &nbsp;·&nbsp; Nomor K3/CK/FNB/01 &nbsp;·&nbsp; Revisi 00 &nbsp;·&nbsp; Harap disimpan untuk arsip perpanjangan
+    Dokumen ini diterbitkan oleh Dinas SAKRA &nbsp;·&nbsp; Nomor SAKRA/CK/FNB/01 &nbsp;·&nbsp; Revisi 00 &nbsp;·&nbsp; Harap disimpan untuk arsip perpanjangan
   </div>
 
 </div>
@@ -827,7 +827,7 @@ const cats = [
     title: "Dokumen & Administrasi",
     color: "#5F5E5A",
     items: [
-      { text: "Sertifikat K3 sebelumnya (jika ada) tersimpan dan dapat ditunjukkan" },
+      { text: "Sertifikat SAKRA sebelumnya (jika ada) tersimpan dan dapat ditunjukkan" },
       { text: "Daftar nama karyawan terbaru sudah disiapkan" },
       { text: "Izin usaha dapat ditunjukkan saat diminta petugas" },
       { text: "Pemilik atau perwakilan yang berwenang hadir saat inspeksi", warn: true },
@@ -838,7 +838,7 @@ const cats = [
 let state = {};
 let total = 0;
 let itemCounter = 0;
-const STORAGE_KEY = 'k3_inspeksi_snapshot_v1';
+const STORAGE_KEY = 'SAKRA_inspeksi_snapshot_v1';
 let saveTimer = null;
 const INTEGRITY_SCHEMA = 1;
 const FIELD_IDS = [
@@ -863,7 +863,7 @@ function formatDocNo() {
   const seqRaw = (seqInput?.value || '').replace(/\D/g, '');
   const seq = seqRaw ? seqRaw.padStart(3, '0').slice(-3) : '001';
 
-  docNoEl.textContent = `K3-CK-FNB/${wilayah}/${year}-${month}/${seq}`;
+  docNoEl.textContent = `SAKRA-CK-FNB/${wilayah}/${year}-${month}/${seq}`;
 }
 
 function getStateClass(value) {
@@ -1050,7 +1050,7 @@ async function exportSnapshot() {
   const date = new Date().toISOString().slice(0, 10);
   const seq = (getInputValue('doc-seq').replace(/\D/g, '') || '001').padStart(3, '0').slice(-3);
   a.href = url;
-  a.download = `backup-k3-${date}-${seq}.json`;
+  a.download = `backup-SAKRA-${date}-${seq}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -1237,7 +1237,7 @@ function updateEligibility(done, denied) {
       eligibilityLabel.textContent = 'Siap Diverifikasi Petugas';
       eligibilityLabel.classList.add('warn');
       banner.classList.add('warn');
-      banner.innerHTML = 'i &nbsp; Self-assessment lengkap. Lanjutkan verifikasi bersama petugas K3.';
+      banner.innerHTML = 'i &nbsp; Self-assessment lengkap. Lanjutkan verifikasi bersama petugas SAKRA.';
     } else {
       eligibilityLabel.textContent = 'Belum Lengkap';
       eligibilityLabel.classList.add('warn');
